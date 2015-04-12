@@ -35,7 +35,7 @@ class Framework {
     this._configureDefaults();
 
     // Configure the application routing module.
-    this.router = new Router({});
+    this.router = new Router();
 
     // Set up the request and response objects
     this.request = { 
