@@ -1,7 +1,7 @@
 'use strict';
 
 var http = require('http'),
-    helpers = require('nekojs-helpers'),
+    helpers = require('helpers'),
     mime = require('nekojs-mime');
 
 /**
