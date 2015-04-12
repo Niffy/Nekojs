@@ -21,8 +21,7 @@
 	"nekojs-favicon": "git://github.com/Nekojs-Favicon/Nekojs-Favicon.git#0.0.1",
 	"nekojs-helpers": "git://github.com/Nekojs-Helpers/Nekojs-Helpers.git#0.0.1",
 	"nekojs-query": "git://github.com/Nekojs-Helpers/Nekojs-Static.git#0.0.1",
-	"nekojs-static": "git://github.com/Nekojs-Helpers/Nekojs-Query.git#0.0.1",
-	"nekojs-router": "git://github.com/Nekojs-Helpers/Nekojs-Router.git#0.0.1"
+	"nekojs-static": "git://github.com/Nekojs-Helpers/Nekojs-Query.git#0.0.1"
   }
 }
 
