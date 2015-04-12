@@ -1,11 +1,25 @@
 {
-  "name": "framework",
+  "name": "nekojs",
   "version": "0.0.1",
   "description": "Simple iojs framework",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT"
+  "author": "Jon Watkins <jonwatkins86@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+  	"email": "jonwatkins86@gmail.com",
+  	"url": "https://github.com/Nekojs/Nekojs/issues"
+  },
+  "repository": { 
+  	"type" : "git", 
+  	"url" : "http://github.com/Nekojs/Nekojs.git"
+  },
+  "dependencies": {
+  	"nekojs-debug": "git://github.com/Nekojs/Nekojs-Debug.git#0.0.1",
+	"nekojs-favicon": "git://github.com/Nekojs-Favicon/Nekojs-Favicon.git#0.0.1",
+	"nekojs-helpers": "git://github.com/Nekojs-Helpers/Nekojs-Helpers.git#0.0.1"
+  }
 }
+

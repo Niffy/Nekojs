@@ -1,0 +1,7 @@
+/**
+ *  Export the core middleware functions
+ */
+module.exports.init = require('./init');
+module.exports.query = require('query');
+module.exports.favicon = require('favicon');
+module.exports.static = require('static');

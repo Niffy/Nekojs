@@ -2,7 +2,7 @@
 
 var http = require('http'),
     helpers = require('helpers'),
-    mime = require('nekojs-mime');
+    mime = require('mime');
 
 /**
  *  Our response class
