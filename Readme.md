@@ -9,7 +9,7 @@
 5. Refactor favicon middleware to return more meta data
 6. Refactor favicon files to return more meta data
 7. Add JSON response method to response class (helpful for consistent API responses)
-8. Improve the route handler to make more useful routes (matches way to specific)
+8. Allow for regex routes
 9. Fix status codes in response
 10. Add middleware to deal with post data
 11. Design better templating engine

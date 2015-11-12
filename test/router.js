@@ -53,38 +53,6 @@ describe('route', function () {
 
     it('should hve a function to dispatch the route', function () {
       assert.equal('function', typeof route.handle);
-    });    
-
-    it('should be able to handle a matched method', function () {
-      var req = { method:  'get' };
-      route.handle(null, req, {}, function () {});
-    });
-
-    it('should just call done if the method does not match', function () {
-      var req = { method:  'post' };
-      route.handle(null, req, {}, function () {});
-    });
-
-    it('should not pass the error if the middleware contains 4 params', function (done) {
-      var req = { method: 'get' };
-      var err = new Error('omg it broke');
-      route.handle(err, req, {}, function (req, res) {
-        done();
-      });
-    });
-
-    it('should pass the error if the middleware contains 4 params', function (done) {
-      var req = { method: 'get' };
-      var err = new Error('omg it broke');
-      
-      var route1 = new Route('/home', function (err, req, res, done){ 
-        assert.equal('omg it broke', err.message);
-        done(); 
-      }, '*');
-
-      route1.handle(err, req, {}, function (req, res) {
-        done();
-      });
     });
 
   });  
@@ -249,6 +217,64 @@ describe('router', function(){
 
     });
 
+    it('should be able to match all routes', function (done) {
+      var index = 0;
+
+      var sendMessage = function (req, res, next) {
+        index++;
+        next();
+      };
+
+      router.use('*', sendMessage);
+
+      req.url = '/api/users/123';
+
+      router.handle(req, res, function () {
+        assert.equal(index, 1);
+        done();
+      });
+    });
+
+    it('should be able to match a specific route', function (done) {
+      var index = 0;
+
+      var sendMessage = function (req, res, next) {
+        index++;
+        next();
+      };
+
+      router.use('*', sendMessage);
+      router.use('/api/users/:id/profile', sendMessage);
+      router.use('/api/users/:id', sendMessage);
+
+      req.url = '/api/users/123';
+
+      router.handle(req, res, function () {
+        assert.equal(index, 2);
+        done();
+      });
+    });    
+
+    it('should be able to handle a slash', function (done) {
+      var index = 0;
+
+      var sendMessage = function (req, res, next) {
+        index++;
+        next();
+      };
+
+      router.use('*', sendMessage);
+      router.use('/api', sendMessage);
+      router.use('/', sendMessage);
+
+      req.url = '/';
+
+      router.handle(req, res, function () {
+        assert.equal(index, 2);
+        done();
+      });
+    });  
+
     it('should not execute the next middleware if the url does not match', function (done) {
       var index = 0;
 
@@ -257,21 +283,35 @@ describe('router', function(){
         next();
       };
 
-      var extraMethod = function (req, res, next) {
+      router.use('/api/users/:id/profile', sendMessage);
+      router.use('/api/users/:id', sendMessage);
+      router.use('/api/users', sendMessage);
+      router.use('*', sendMessage);
+
+      req.url = '/api/users/123';
+
+      router.handle(req, res, function () {
+        assert.equal(index, 2);
+        done();
+      });
+
+    });   
+
+    it('should not execute the next middleware if the method does not match', function (done) {
+      var index = 0;
+
+      var sendMessage = function (req, res, next) {
         index++;
         next();
       };
 
-      var annotherMethod = function (req, res, next) {
-        index++;
-        next();
-      };
+      router.create('/api/users/:id/profile', sendMessage, '*');
+      router.create('/api/users/:id', sendMessage, '*');
+      router.create('/api/users', sendMessage, '*');
+      router.create('*', sendMessage, 'get');
+      router.create('*', sendMessage, 'post');
 
-      router.use('/home', sendMessage);
-      router.use('/home', extraMethod);
-      router.use('/pow', annotherMethod);
-
-      req.url = '/home';
+      req.url = '/api/users/123';
 
       router.handle(req, res, function () {
         assert.equal(index, 2);
@@ -280,29 +320,96 @@ describe('router', function(){
 
     });  
 
-    it('Should continue with the next middleware passing along the error, if one in the chain throws', function (done) {
+    it('should be able to handle passing an error - it will skip other middleware untill it finds an error handler or call done', 
+      function (done) {
+        var index = 0;
+        var up = new Error('omg it broke');
+        var err;
+
+        var sendError = function (req, res, next) {
+          index++;
+          next(up);
+        };
+
+        var sendMessage = function (req, res, next) {
+          index++;
+          next();
+        };      
+
+        var handleIt = function (e, req, res, next) {
+          err = e;
+          index++;
+          next();
+        };
+
+        router.use('*', sendError);
+        router.use('*', sendMessage);
+        router.use('*', handleIt);
+
+        req.url = '/api/users/123';
+
+        router.handle(req, res, function () {
+          assert.equal(err.message, 'omg it broke');
+          assert.equal(index, 2);
+          done();
+        });
+      }
+    );          
+
+    it('should handle middleware throwing an error', function () {
       var up = new Error('omg it broke');
 
-      var throwError = function (req, res, next) {
-        throw up; // LOL
-        next();
+      var sendError = function (req, res, next) {
+        throw up // LOL
       };
 
-      var extraMethod = function (err, req, res, next) {
-        assert.equal('omg it broke!', err.message);
+      var sendMessage = function (req, res, next) {
+        index++;
         next();
-      };  
+      }; 
 
-      router.use('/throw', throwError);
-      router.use('/throw', extraMethod); 
+      router.use('*', sendError);
+      router.use('*', sendMessage);
 
-      req.url = '/throw'; 
-
-      router.handle(req, res, function () {
+      router.handle(req, res, function (err) {
+        assert.equal(err.message, 'omg it broke');
+        assert.equal(index, 1);
         done();
       });
+    });
 
-    });  
+  });
+
+  describe('route.params', function () {
+
+    var router, req, res;
+
+    beforeEach(function () {
+      router = new Router();
+      req = { method: 'get' };
+      res = { };      
+    });
+
+    afterEach(function () {
+      router = null;
+      req = null;
+      res = null;
+    });
+
+    it('should set a params object onto the req object', function (done) {
+
+      var sendMessage = function (req, res, next) {
+        next();
+      }; 
+
+      router.use('*', sendMessage);
+
+      router.handle(req, res, function (err, req, res) {
+        console.log(req.params);
+        assert.equal(Object.prototype.toString.call(req.params), '[object Object]');
+        done();
+      });     
+    });
 
   });
 
