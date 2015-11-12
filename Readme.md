@@ -8,7 +8,6 @@ node webframework
 * Make the session middleware do something
 * Refactor favicon middleware to return more meta data
 * Refactor favicon files to return more meta data
-* Allow for regex routes
 * Add middleware to deal with post data
 * Design better templating engine
 * Support more mime type for static file middleware

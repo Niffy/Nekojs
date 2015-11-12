@@ -275,6 +275,26 @@ describe('router', function(){
       });
     });  
 
+    it('should allow a RegExp route to be defined', function (done) {
+      var index = 0;
+
+      var sendMessage = function (req, res, next) {
+        index++;
+        next();
+      };
+
+      router.use('*', sendMessage);
+      router.use(/^\/api\/(\w+)/gi, sendMessage);
+      router.use('/', sendMessage);
+
+      req.url = '/api/users';
+
+      router.handle(req, res, function () {
+        assert.equal(index, 2);
+        done();
+      });
+    })
+
     it('should not execute the next middleware if the url does not match', function (done) {
       var index = 0;
 
@@ -357,6 +377,17 @@ describe('router', function(){
     );          
 
     it('should handle middleware throwing an error', function () {
+      assert.throws(function () {
+        var sendMessage = function (req, res, next) {
+          index++;
+          next();
+        }; 
+
+        router.use(21, sendMessage);
+      });
+    });
+
+    it('should handle middleware throwing an error', function (done) {
       var up = new Error('omg it broke');
 
       var sendError = function (req, res, next) {
@@ -373,10 +404,9 @@ describe('router', function(){
 
       router.handle(req, res, function (err) {
         assert.equal(err.message, 'omg it broke');
-        assert.equal(index, 1);
         done();
       });
-    });
+    });    
 
   });
 
