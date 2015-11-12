@@ -1,7 +1,7 @@
 {
-  "html": "text/html",
-  "js": "application/javascript",
-  "css": "text/css",
-  "json": "application/json",
-  "ico": "image/x-icon"
+  "text/html": ["html"],
+  "application/javascript": ["js"],
+  "text/css": ["css"],
+  "application/json": ["json"],
+  "image/x-icon": ["ico"]
 }
