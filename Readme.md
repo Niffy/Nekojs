@@ -9,3 +9,4 @@ node webframework
 * Add middleware to deal with post data
 * Design better templating engine
 * Support more mime type for static file middleware
+* Support URL parameters
