@@ -3,7 +3,7 @@
 node webframework
 
 ```
-$ npm install koa
+$ npm install nekojs
 ```
 
 requires __node v4.0.0__ or higher for (partial) ES2015 support.
