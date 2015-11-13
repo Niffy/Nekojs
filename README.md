@@ -1,6 +1,6 @@
 # NekoJS
 
-node webframework
+node framework for building web applications
 
 ```
 $ npm install nekojs
