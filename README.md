@@ -38,6 +38,6 @@ app.listen(p => {
 
 see [AUTHORS](AUTHORS).
 
-# License
+### License
 
 MIT
