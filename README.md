@@ -2,7 +2,7 @@
 
 node framework for building web applications.
 
-Test coverage [http://nekojs-example.herokuapp.com/public/coverage/lcov-report/index.html](here).
+Test coverage [http://www.nekojs.co.uk/public/coverage/lcov-report/index.html](here).
 
 ```
 $ npm install nekojs
